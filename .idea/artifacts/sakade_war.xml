@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="sakade:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="sakade.war">
+      <element id="artifact" artifact-name="sakade:war exploded" />
+    </root>
+  </artifact>
+</component>
