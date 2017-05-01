@@ -38,12 +38,6 @@ tbody.scrollBody{
 <div class="container">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-        <%--<h1>--%>
-            <%--弁検索--%>
-        <%--</h1>--%>
-        <%--<ol class="breadcrumb">--%>
-            <%--<li><i class="fa fa-dashboard"></i> Index</li>--%>
-        <%--</ol>--%>
     </section>
     <hr/>
     <!-- Main content -->
@@ -52,10 +46,10 @@ tbody.scrollBody{
             <!-- collection -->
             <div class="col-md-4">
                 <div class="btn-group" role="group">
-                    <a href="/sakade/list/valveMult" class="btn btn-default" onclick="return saveSelectedForValve()">複合検索</a>
+                    <%--<a href="/sakade/list/valveMult" class="btn btn-default" onclick="return saveSelectedForValve()">複合検索</a>--%>
                     <a href="/sakade/list/valve" class="btn btn-default bg-yellow active" onclick="return saveSelectedForValve()">弁検索</a>
-                    <a href="/sakade/list/kikiSearch" class="btn btn-default" onclick="return saveSelectedForValve()">機器検索</a>
-                    <a href="/sakade/list/buhinSearch" class="btn btn-default" onclick="return saveSelectedForValve()">部品検索</a>
+                    <%--<a href="/sakade/list/kikiSearch" class="btn btn-default" onclick="return saveSelectedForValve()">機器検索</a>--%>
+                    <%--<a href="/sakade/list/buhinSearch" class="btn btn-default" onclick="return saveSelectedForValve()">部品検索</a>--%>
                 </div>
             </div>
         </div></br></br>

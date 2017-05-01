@@ -16,6 +16,10 @@
         order BY updDate DESC
     </select>
 
+    <select id="findvalveByVNoAndLocation" resultType="Valve" parameterType="Valve">
+        SELECT * FROM kikisystem where  delFlg="0" and vNo=#{vNo} and locationName=#{locationName} ORDER BY trkDate DESC;
+    </select>
+
     <select id="findByValve" parameterType="Valve" resultType="Valve">
         select * from kikisystem
         where delFlg="0"
@@ -296,4 +300,112 @@
         kenanFlg = #{kenanFlg}
         where kikiSysId = #{kikiSysId}
     </update>
+
+
+    <insert id="insertValve" parameterType="Valve">
+        insert into kikisystem(locationName, kCode ,kikiSysSeq , vNo, vNoSub, benMeisyo,setBasyo,setKiki,setSetubi,keitou,kougu1M,kougu2S,kougu3T,kougu4L,kougu5O, keisikiRyaku, keisiki, sousaRyaku, sousa, classRyaku, classType, yobikeiRyaku, yobikei, szHouRyaku, szHou, szKikaku, zaisituRyaku, zaisitu, aturyokuMax, tani, ondoMax, ryutaiRyaku, ryutai, ics, futai, delFlg,kenanFlg,gpFlg,trkDate, updDate)
+        values(
+        #{locationName},
+        #{kCode},
+        #{kikiSysSeq},
+        #{vNo},
+        #{vNoSub},
+        #{benMeisyo},
+        #{setBasyo},
+        #{setKiki},
+        #{setSetubi},
+        #{keitou},
+        #{kougu1M},
+        #{kougu2S},
+        #{kougu3T},
+        #{kougu4L},
+        #{kougu5O},
+        #{keisikiRyaku},
+        #{keisiki},
+        #{sousaRyaku},
+        #{sousa},
+        #{classRyaku},
+        #{classType},
+        #{yobikeiRyaku},
+        #{yobikei},
+        #{szHouRyaku},
+        #{szHou},
+        #{szKikaku},
+        #{zaisituRyaku},
+        #{zaisitu},
+        #{aturyokuMax},
+        #{tani},
+        #{ondoMax},
+        #{ryutaiRyaku},
+        #{ryutai},
+        #{ics},
+        #{futai},
+        #{delFlg},
+        #{kenanFlg},
+        #{gpFlg},
+        #{trkDate},
+        #{updDate}
+        )
+    </insert>
+
+    <update id="updateValveByValve" parameterType="Valve">
+        update kikisystem
+        set locationName = #{locationName},
+        kCode = #{kCode},
+        vNo = #{vNo},
+        vNoSub = #{vNoSub},
+        benMeisyo = #{benMeisyo},
+        setBasyo=#{setBasyo},
+        setKiki=#{setKiki},
+        setSetubi=#{setSetubi},
+        keitou=#{keitou},
+        kougu1M=#{kougu1M},
+        kougu2S=#{kougu2S},
+        kougu3T=#{kougu3T},
+        kougu4L=#{kougu4L},
+        kougu5O=#{kougu5O},
+        keisikiRyaku = #{keisikiRyaku},
+        keisiki = #{keisiki},
+        sousaRyaku = #{sousaRyaku},
+        sousa = #{sousa},
+        classRyaku = #{classRyaku},
+        classType = #{classType},
+        yobikeiRyaku = #{yobikeiRyaku},
+        yobikei = #{yobikei},
+        szHouRyaku = #{szHouRyaku},
+        szHou = #{szHou},
+        szKikaku = #{szKikaku},
+        zaisituRyaku = #{zaisituRyaku},
+        zaisitu = #{zaisitu},
+        aturyokuMax = #{aturyokuMax},
+        tani = #{tani},
+        ondoMax = #{ondoMax},
+        ryutaiRyaku = #{ryutaiRyaku},
+        ryutai = #{ryutai},
+        ics = #{ics},
+        futai = #{futai},
+        updDate = #{updDate}
+        where kikiSysId = #{kikiSysId}
+    </update>
+
+    <select id="getLastInsertId" resultType="int">
+        select kikiSysId from kikisystem ORDER BY kikiSysId DESC limit 1
+    </select>
+
+    <select id="findValveByKikiSysId" parameterType="int" resultType="Valve">
+        select * from kikisystem where kikiSysId=#{kikiSysId}
+    </select>
+
+    <update id="deleteKikiSystemByKikiSysId" parameterType="Valve">
+        UPDATE kikisystem
+        SET delFlg="1",
+        updDate = #{updDate}
+        WHERE kikiSysId=#{kikiSysId}
+    </update>
+
+    <select id="findKikiBySysId" parameterType="int" resultType="Kiki">
+        SELECT * FROM kiki
+        WHERE kikisysidKiki=#{kikisysidKiki} and kikiDelFlg="0";
+    </select>
+
 </mapper>

@@ -14,6 +14,9 @@ public interface ItemMapper {
     /**弁情報により、弁リストを取得*/
     public List<Valve> findByValve(Valve valve);
 
+    /**弁番号とLocationにより、弁を取得*/
+    public List<Valve> findvalveByVNoAndLocation(Valve valve);
+
     /**機器情報により、機器リストを取得*/
     public List<Kiki> findByKiki(Kiki kiki);
 
@@ -64,5 +67,23 @@ public interface ItemMapper {
 
     /**弁IDにより、懸案フラグを更新*/
     public void updateKenanFlgByKikisys(Valve valve);
+
+    /**弁をkikisysテーブルに追加*/
+    public void insertValve(Valve valve);
+
+    /**kikiテーブルの最後のIDを取得*/
+    public int getLastInsertId();
+
+    /**弁を更新*/
+    void updateValveByValve(Valve valve);
+
+    /**弁IDにより、弁を取得*/
+    public Valve findValveByKikiSysId(int kikiSysId);
+
+    /**弁IDにより、弁を削除*/
+    public void deleteKikiSystemByKikiSysId(Valve valve);
+
+    /**弁IDにより、機器リストを取得*/
+    public List<Kiki> findKikiBySysId(int KikiSysId);
 
 }

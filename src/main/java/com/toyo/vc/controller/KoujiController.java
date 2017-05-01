@@ -256,10 +256,36 @@ public class KoujiController {
         session.setAttribute("kouji", kouji);
         modelMap.addAttribute("kouji", kouji);
 
+        //kouji status
+        List<Master> koujiPersons=masterService.getMasterByType("責任者");
+        List<Master> koujiKjkbns=masterService.getMasterByType("工事区分");
+        List<Master> koujiSyukans=masterService.getMasterByType("主管係");
+        List<Master> koujiGyosyas=masterService.getMasterByType("点検業者");
+        List<Master> koujiStatus=masterService.getMasterByType("工事進捗");
+        //koujiStatusをソートする
+        Collections.sort(koujiStatus,
+                new Comparator<Master>() {
+                    @Override
+                    public int compare(Master entry1,
+                                       Master entry2) {
+                        return (entry1.getCode())
+                                .compareTo(entry2.getCode());
+                    }
+                });
+
+        //make cache
+        session.setAttribute("koujiPersons",koujiPersons);
+        session.setAttribute("koujiKjkbns",koujiKjkbns);
+        session.setAttribute("koujiSyukans",koujiSyukans);
+        session.setAttribute("koujiGyosyas",koujiGyosyas);
+        session.setAttribute("koujiStatus",koujiStatus);
+
+
         //historyテーブルを更新
         historyValveService.addHistoryValve(Config.TKouji,kouji.getId()+"",Config.TKoujiIndexDetail,session,request);
 
-        return "/kouji/index";
+        //坂出データ登録ため
+        return "/kouji/instruct";
     }
 
     /**

@@ -108,7 +108,7 @@ public class IndexController {
             String location=(String)session.getAttribute("locationNameSelectedForKouji");
             List<Kouji> koujiresult=(List<Kouji>)session.getAttribute("locationKoujiSelectedForKouji");
             if(StringUtil.isEmpty(location)){
-                location="四国電力 阿南発電所 １号機";
+                location="四国電力 坂出発電所 ２号機";
                 koujiresult=koujiMapper.findKoujiByLocation(location);
             }
 

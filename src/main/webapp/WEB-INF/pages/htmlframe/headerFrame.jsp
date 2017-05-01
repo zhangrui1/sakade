@@ -18,7 +18,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/sakade/">Valdac G </a>
+                <a class="navbar-brand" href="/sakade/">sakade</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -28,7 +28,8 @@
 
                 </form>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/sakade/list/valveMult">弁検索</a></li>
+                    <li><a href="/sakade/list/valve">弁検索</a></li>
+                    <li><a href="/sakade/item/addNewvalve">新規弁</a></li>
                     <li><a href="/sakade/">工事検索</a></li>
                     <li class="kengen-operation"><a href="/sakade/kouji/add">新規工事</a></li>
                     <li class="kengen-operation"><a href="/sakade/HistoryValve/getHisotryForToday">操作履歴</a></li>
@@ -36,6 +37,7 @@
                         <%--<a href="#" class="dropdown-toggle" data-toggle="dropdown">--%>
                             <%--<i class="glyphicon glyphicon-user"></i>--%>
                             <%--<span>お疲れ様,${user.username} </span>--%>
+                            <input type="hidden" id="userid" value="${user.userid}" />
                             <input type="hidden" id="username" value="${user.username}" />
                             <input type="hidden" id="userKengen" value="${user.kengen}" />
                         <%--</a>--%>

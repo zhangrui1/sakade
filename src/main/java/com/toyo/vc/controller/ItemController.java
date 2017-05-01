@@ -1384,4 +1384,253 @@ public class ItemController {
 
         return "true";
     }
+
+
+
+    /**
+     * 弁　新規登録画面へ遷移
+     *
+     * @return String　弁新規画面パス
+     * */
+    @RequestMapping(value = "/addNewvalve", method = RequestMethod.GET)
+    public String goValve(HttpSession session,ModelMap modelMap){
+        User user=(User)session.getAttribute("user");
+        if(user != null){
+            Valve valve=new Valve();
+            session.setAttribute("valve",valve);
+
+            return "valveNew/addvalve";
+        }else{
+            modelMap.addAttribute("message",Config.TUserNull);
+            return Config.LoginSession;
+        }
     }
+
+    /**
+     * 弁 新規登録
+     *
+     * @param valveForm 弁情報
+     *
+     * @return String　弁情報編集画面パス
+     * */
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public String addvlave(@ModelAttribute("ValveForm")ValveForm valveForm, ModelMap modelMap,HttpSession session,HttpServletRequest request) throws IOException {
+        User user=(User)session.getAttribute("user");
+        if(user != null){
+            //valveFormからValveに変更
+            Valve valve = new Valve();
+            valve.makeupValveByForm(valveForm);
+
+            //insert into kikisystem table
+            valve = itemService.addValve(valve);
+            //lucene初期化
+            Map<String,String> indexPath = (Map<String,String>)session.getAttribute("indexPath");
+            if(indexPath==null) {
+                indexPath = luceneIndexService.generateLocalIndex();
+            }
+            session.setAttribute("indexPath",indexPath);
+
+            Directory indexValveFile=FSDirectory.open(new File(indexPath.get("indexValveFile")));
+            Directory indexKikiFile=FSDirectory.open(new File(indexPath.get("indexKikiFile")));
+            Directory indexBuhinFile=FSDirectory.open(new File(indexPath.get("indexBuhinFile")));
+
+            //lucene更新
+            luceneIndexService.insertRecord(indexValveFile,"VA"+valve.getKikiSysId()+"End",valve.toText());
+
+            //session更新
+            List<Valve> valves=(List<Valve>)session.getAttribute("locationValveSelectedForValve");
+            if(!CollectionUtils.isEmpty(valves)){
+                if(valve.getLocationName().equals(valves.get(0).getLocationName())){
+                    valves.add(0,valve);
+                }
+            }
+            session.setAttribute("locationValveSelectedForValve",valves);
+
+            //keyword取得
+            String keyword=(String)session.getAttribute("filterValve");
+            if(StringUtil.isEmpty(keyword)){
+                keyword="";
+            }
+            session.setAttribute("filterValve",keyword);
+
+            return "redirect:/list/valve";
+        }else{
+            modelMap.addAttribute("message",Config.TUserNull);
+            return Config.LoginSession;
+        }
+    }
+
+    /**
+     * 弁　編集
+     *
+     * @param valveForm 弁 更新後情報
+     *
+     * @return String　弁情報編集画面パス
+     * */
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    public String edit(@ModelAttribute("ValveForm")ValveForm valveForm, ModelMap modelMap, HttpSession session,HttpServletRequest request) throws IOException {
+        User user=(User)session.getAttribute("user");
+        if(user != null){
+            //valveFormからValveに変更し,弁IDと作成日付を追加
+            Valve valve = new Valve();
+            valve.makeupValveByForm(valveForm);
+            valve.setKikiSysId(valveForm.getKikiSysId());
+
+            //DB更新
+            itemService.updateValve(valve);
+            valve=itemService.getValveByKikiSysId(valve.getKikiSysId()+"");
+
+            //弁IDから機器リストを取得
+            List<Kiki> kikiList = itemService.getKikiBySysId(""+valveForm.getKikiSysId());
+            modelMap.addAttribute("kikiList",kikiList);
+
+            modelMap.addAttribute("valve",valve);
+            modelMap.addAttribute("message","更新完了");
+            session.setAttribute("valve",valve);
+
+            //lucene初期化
+            Map<String,String> indexPath = (Map<String,String>)session.getAttribute("indexPath");
+            if(indexPath==null) {
+                indexPath = luceneIndexService.generateLocalIndex();
+            }
+            session.setAttribute("indexPath",indexPath);
+
+            Directory indexValveFile=FSDirectory.open(new File(indexPath.get("indexValveFile")));
+            Directory indexKikiFile=FSDirectory.open(new File(indexPath.get("indexKikiFile")));
+            Directory indexBuhinFile=FSDirectory.open(new File(indexPath.get("indexBuhinFile")));
+            //lucene更新
+            luceneIndexService.updateRecord(indexValveFile, "VA" + valve.getKikiSysId() + "End", valve.toText());
+
+            //session更新
+            List<Valve> valveList=(List<Valve>)session.getAttribute("locationValveSelectedForValve");
+            List<Valve> newValveList=new ArrayList<Valve>();
+            if(!CollectionUtils.isEmpty(valveList)){
+                for(int i=0;i<valveList.size();i++){
+                    if(valveList.get(i).getKikiSysId()==valve.getKikiSysId()){
+                        newValveList.add(valve);
+                    }else{
+                        newValveList.add(valveList.get(i));
+                    }
+                }
+            }
+            session.setAttribute("locationValveSelectedForValve",newValveList);
+
+
+
+            return "valveNew/addvalvekiki";
+        }else{
+            modelMap.addAttribute("message",Config.TUserNull);
+            return Config.LoginSession;
+        }
+
+    }
+
+    /**
+     * 弁　削除
+     *
+     * @param kikiSysId 弁ID
+     *
+     * @return String　item画面パス
+     * */
+    @RequestMapping(value = "/{kikiSysId}/delete", method = RequestMethod.GET)
+    public String deleteValveById(@PathVariable String kikiSysId,ModelMap modelMap,  HttpSession session,HttpServletRequest request) throws IOException {
+        User user=(User)session.getAttribute("user");
+        if(user != null){
+            //lucene初期化
+            Map<String,String> indexPath = (Map<String,String>)session.getAttribute("indexPath");
+            if(indexPath==null) {
+                indexPath = luceneIndexService.generateLocalIndex();
+            }
+            session.setAttribute("indexPath",indexPath);
+
+            Directory indexValveFile=FSDirectory.open(new File(indexPath.get("indexValveFile")));
+            Directory indexKikiFile=FSDirectory.open(new File(indexPath.get("indexKikiFile")));
+            Directory indexBuhinFile=FSDirectory.open(new File(indexPath.get("indexBuhinFile")));
+
+
+            itemService.deleteKikiSystemByKikiSysId(kikiSysId);
+            Valve valve=itemService.getValveByKikiSysId(kikiSysId);
+            luceneIndexService.updateRecord(indexValveFile, "VA" + valve.getKikiSysId() + "End", valve.toText());
+
+            //session更新
+            List<Valve> valves=(List<Valve>)session.getAttribute("locationValveSelectedForValve");
+            List<Valve> valvesNew=new ArrayList<Valve>();
+            for(int i=0;i<valves.size();i++){
+                if(kikiSysId.equals(valves.get(i).getKikiSysId()+"")){
+                }else{
+                    valvesNew.add(valves.get(i));
+                }
+            }
+            session.setAttribute("locationValveSelectedForValve",valvesNew);
+            session.removeAttribute("valve");
+
+
+            return "redirect:/sakade/list/valveMult";
+        }else{
+            modelMap.addAttribute("message",Config.TUserNull);
+            return Config.LoginSession;
+        }
+
+    }
+
+    /**
+     * 弁番号　重複するかどうかチェックする 新規
+     *
+     * @param valVno 弁番号
+     * @param location 会社名
+     *
+     * @return String　工事リスト
+     * */
+    @RequestMapping(value = "/getResultForVNoCheck", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public  String getResultForVNoCheck(@RequestParam("valVno")String valVno,@RequestParam("location")String location,ModelMap modelMap,HttpSession session){
+
+        Valve valve=new Valve();
+        valve.setvNo(valVno);
+        valve.setLocationName(location);
+
+        List<Valve> valveresult=itemMapper.findvalveByVNoAndLocation(valve);
+        if(valveresult==null || valveresult.size()==0){
+            return "true";//使える
+        }else{
+            return "false";//使えない
+        }
+    }
+
+
+    /**
+     * 弁番号　重複するかどうかチェックする　編集
+     *
+     * @param location 会社名
+     * @param location 会社名
+     *
+     * @return String　工事リスト
+     * */
+    @RequestMapping(value = "/getResultForVNoCheckEdit", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public  String getResultForVNoCheckEdit(@RequestParam("kikiSysId")String kikiSysId,@RequestParam("valVno")String valVno,@RequestParam("location")String location,ModelMap modelMap,HttpSession session){
+        Valve valve=new Valve();
+        valve.setvNo(valVno);
+        valve.setLocationName(location);
+
+        List<Valve> valveresult=itemMapper.findvalveByVNoAndLocation(valve);
+        if(valveresult==null || valveresult.size()==0){
+            return "true";//使える
+        }else{
+            List<Valve> valveresultTmp=new ArrayList<Valve>();//編集弁以外はあるかどうかチェック
+            for(int i=0;i<valveresult.size();i++){
+                if(kikiSysId.equals(valveresult.get(i).getKikiSysId()+"")){
+                }else{
+                    valveresultTmp.add(valveresult.get(i));
+                }
+            }
+
+            if(valveresultTmp==null || valveresultTmp.size()==0){
+                return "true";//使える
+            }else{
+                return "false";//使えない
+            }
+        }
+    }
+
+}

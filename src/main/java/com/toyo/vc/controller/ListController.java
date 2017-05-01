@@ -263,10 +263,11 @@ public class ListController {
 
 
         //会社名をsessionから取得
-        String location=(String)session.getAttribute("locationNameSelectedForValve");
-        if(StringUtil.isEmpty(location)){
-            location="全部会社名";
-        }
+//        String location=(String)session.getAttribute("locationNameSelectedForValve");
+        String location="四国電力 坂出発電所 ２号機";
+//        if(StringUtil.isEmpty(location)){
+//            location="四国電力 坂出発電所 ２号機";
+//        }
         //valve取得
         List<Valve> valveMultResults=(List<Valve>)session.getAttribute("valveMultResultsForKikisys");
         if(CollectionUtils.isEmpty(valveMultResults)){

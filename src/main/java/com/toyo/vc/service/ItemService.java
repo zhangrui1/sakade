@@ -121,4 +121,62 @@ public class ItemService {
         Valve valve=itemMapper.findKikisysBykikisysId(kikiSysId);
         return valve;
     }
+
+
+    /**弁をkikisysテーブルに追加*/
+    public Valve addValve(Valve valve) {
+
+        //make sub id
+        valve.setkCode("");
+        valve.setKikiSysSeq("");
+
+        //append Date
+        Date date = new Date();
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        valve.setTrkDate(sdf1.format(date));
+        valve.setUpdDate(sdf1.format(date));
+        valve.setDelFlg("0");
+        valve.setKenanFlg("");
+        valve.setGpFlg("0");
+
+        itemMapper.insertValve(valve);
+
+        //append id
+        valve.setKikiSysId(itemMapper.getLastInsertId());
+        return valve;
+    }
+    /**弁を更新*/
+    public void updateValve(Valve valve) {
+        //append Date
+        Date date = new Date();
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        valve.setUpdDate(sdf1.format(date));
+        itemMapper.updateValveByValve(valve);
+    }
+
+    /**弁IDにより、弁を取得*/
+    public Valve getValveByKikiSysId(String kikiSysId) {
+        return itemMapper.findValveByKikiSysId(Integer.valueOf(kikiSysId));
+    }
+
+    /**弁IDにより、機器リストを取得*/
+    public List<Kiki> getKikiBySysId(String KikiSysId){
+        List<Kiki> kikiList = itemMapper.findKikiBySysId(Integer.valueOf(KikiSysId));
+        return kikiList;
+    }
+
+    /**弁IDにより、弁を削除*/
+    public void deleteKikiSystemByKikiSysId(String kikiSysId) {
+        //append Date
+        Valve valve =new Valve();
+        Date date = new Date();
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        valve.setUpdDate(sdf1.format(date));
+        valve.setKikiSysId(Integer.valueOf(kikiSysId));
+
+        itemMapper.deleteKikiSystemByKikiSysId(valve);
+    }
+
+
+
 }
