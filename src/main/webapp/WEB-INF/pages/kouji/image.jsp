@@ -1062,7 +1062,7 @@ var apiKey = 'AIzaSyCnoDTW4BQB-DKKf9YWd9AaoEFYKeN6Esw';
 
 var scopes = 'https://www.googleapis.com/auth/devstorage.full_control';
 var API_VERSION = 'v1';
-var BUCKET = 'sakade';//テストサーバ用
+var BUCKET = 'sakaide';//テストサーバ用
 //var BUCKET = 'valdac-construction-asia'; //本番
 var object = "";
 

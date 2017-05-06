@@ -274,7 +274,7 @@ valueBen=0;//valve 用
 valueKouji=0;//kouji 用
 
 //図面用
-var BUCKETsakade = 'sakade'; //テストサーバ用
+var BUCKETsakade = 'sakaide'; //テストサーバ用
 //var BUCKETsakade = 'valdac-construction-asia'; //本番
 var BUCKETValdac = 'valdac-test'; //テストサーバ用
 //var BUCKETValdac = 'valdac-asia';   //本番
